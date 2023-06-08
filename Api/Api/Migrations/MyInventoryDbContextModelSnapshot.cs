@@ -56,6 +56,11 @@ namespace MyInventory.Api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("PublicId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newsequentialid()");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ItemId");

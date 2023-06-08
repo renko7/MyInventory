@@ -1,3 +1,5 @@
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -5,6 +7,8 @@ using MyInventory.Api;
 using MyInventory.Api.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var appSettings = builder.Configuration.GetSection("Values").Get<AppSettings>();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -16,7 +20,7 @@ builder.Services.Configure<AppSettings>(
 
 builder.Services.AddDbContext<MyInventoryDbContext>(
     options => 
-        options.UseSqlServer("Server=tcp:myinventorydbsqlserver.database.windows.net,1433;Initial Catalog=myinventorydb;Persist Security Info=False;User ID=alok1025;Password=Shruti219;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"));
+        options.UseSqlServer(appSettings.DatabaseConnectionString));
 
 var app = builder.Build();
 
@@ -31,14 +35,38 @@ app.UseHttpsRedirection();
 
 
 app.MapPost("/add-item", async (
-    [FromServices] IOptions<AppSettings> _appSettings,
-    MyInventoryDbContext _dbContext) =>
+    [FromServices] IOptions<AppSettings> appSettings,
+    MyInventoryDbContext dbContext) =>
 {
-    var z = await _dbContext.Items.AddAsync(new Item { Name = "myName", Description = "myDescription" });
+    _ = await dbContext.Items.AddAsync(new Item { Name = "myName", Description = "myDescription" });
 
-    _ = await _dbContext.SaveChangesAsync();
+    _ = await dbContext.SaveChangesAsync();
 
-    return "123";
+    return Results.Ok("Item registered succesfully");
+});
+
+app.MapPost("/upload-image", async (
+    IFormFile picture) =>
+{
+    // IFormFile -> Stream
+
+    var memoryStream = new MemoryStream();
+
+    await picture.CopyToAsync(memoryStream);
+
+    var byteArray = memoryStream.ToArray();
+
+    var base64 = Convert.ToBase64String(byteArray);
+
+    BlobServiceClient blobServiceClient = new BlobServiceClient(appSettings.StorageAccountConnectionString);
+
+    BlobContainerClient imagesContainerClient = blobServiceClient.GetBlobContainerClient("images");
+
+    BlobClient imageClient = imagesContainerClient.GetBlobClient(picture.FileName);
+
+    memoryStream.Position = 0;
+
+    await imageClient.UploadAsync(memoryStream, new BlobHttpHeaders { ContentType = "images/jpeg" });
 });
 
 app.Run();

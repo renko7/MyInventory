@@ -2,10 +2,8 @@
 
 public class Item
 {
-    private readonly Guid _publicId = Guid.NewGuid();
-
     public int Id { get; init; }
-    public Guid PublicId { get { return _publicId; } }
+    public Guid PublicId { get; private set; }
     public string Name { get; set; }
     public string Description { get; set; }
 
@@ -13,9 +11,12 @@ public class Item
 
     public List<Picture> Picture { get; set; } = new();
 
-    public Item() { }
+    public Item() 
+    {
+        PublicId = Guid.NewGuid();
+    }
 
-    public Item(string name, string desc)
+    public Item(string name, string desc) : this()
     {
         Name = name;
         Description = desc;

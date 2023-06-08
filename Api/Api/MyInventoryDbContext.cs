@@ -16,9 +16,9 @@ public class MyInventoryDbContext : DbContext
         modelBuilder.Entity<Picture>()
             .ToTable("Pictures");
 
-        //modelBuilder.Entity<Item>()
-        //    .HasKey(i => i.Id)
-        //    .HasName("Primarykey_Id");
+        modelBuilder.Entity<Item>()
+            .Property(i => i.PublicId)
+            .HasDefaultValueSql("newsequentialid()");
     }
 
     public MyInventoryDbContext(DbContextOptions<MyInventoryDbContext> options)
