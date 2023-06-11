@@ -11,7 +11,7 @@ public class Item
     public Item? ParentItem { get; set; }
     public ICollection<Item> ChildItems { get; set; } = new List<Item>();
 
-    public ICollection<Picture> Pictures { get; set; } = new List<Picture>();
+    public Picture? Picture { get; set; }
 
     public Item() 
     {

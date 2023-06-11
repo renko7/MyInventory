@@ -41,7 +41,7 @@ app.UseHttpsRedirection();
 
 app.MapPost("/add-item", async (
     [FromServices] IOptions<AppSettings> appSettings,
-    ItemDTO itemData,
+    AddItemRequest itemData,
     MyInventoryDbContext dbContext) =>
 {
     _ = await dbContext.Items.AddAsync(new Item { Name = itemData.Name, Description = itemData.Description });
@@ -72,11 +72,6 @@ app.MapPost("{itemId}/upload-image", async (
 
     var content = new StringContent(JsonSerializer.Serialize(new ImageProcessorRequest(itemId, base64String)), Encoding.UTF8, "application/json");
     var response = await httpClient.PostAsync($"{appSettings.ImageProcessorUrl}/api/HttpExample", content);
-
-    // below code did not work looks like its known azure function error
-    // https://stackoverflow.com/questions/73955306/using-postasjsonasync-in-an-azure-function-doesnt-send-the-body-works-in-webap
-    //await httpClient.PostAsJsonAsync($"{appSettings.ImageProcessorUrl}/api/HttpExample", new ImageProcessorRequest("12123", "!23123"));
-
 
     BlobServiceClient blobServiceClient = new BlobServiceClient(appSettings.StorageAccountConnectionString);
 

@@ -74,7 +74,8 @@ namespace MyInventory.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ItemId");
+                    b.HasIndex("ItemId")
+                        .IsUnique();
 
                     b.ToTable("Pictures", (string)null);
                 });
@@ -91,8 +92,8 @@ namespace MyInventory.Api.Migrations
             modelBuilder.Entity("MyInventory.Api.Models.Picture", b =>
                 {
                     b.HasOne("MyInventory.Api.Models.Item", "Item")
-                        .WithMany("Pictures")
-                        .HasForeignKey("ItemId")
+                        .WithOne("Picture")
+                        .HasForeignKey("MyInventory.Api.Models.Picture", "ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -103,7 +104,7 @@ namespace MyInventory.Api.Migrations
                 {
                     b.Navigation("ChildItems");
 
-                    b.Navigation("Pictures");
+                    b.Navigation("Picture");
                 });
 #pragma warning restore 612, 618
         }
