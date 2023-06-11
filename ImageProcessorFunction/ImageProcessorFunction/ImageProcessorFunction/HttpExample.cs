@@ -1,4 +1,6 @@
 using System.Net;
+using System.Text.Json;
+using ImageProcessorFunction.Models;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -15,9 +17,13 @@ namespace ImageProcessorFunction
         }
 
         [Function("HttpExample")]
-        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
+        public async Task<HttpResponseData> RunAsync([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
+
+            var requestBodyString = await new StreamReader(req.Body).ReadToEndAsync();
+
+            var requestData = JsonSerializer.Deserialize<ImageProcessorRequest>(requestBodyString);
 
             var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
