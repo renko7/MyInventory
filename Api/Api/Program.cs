@@ -1,3 +1,4 @@
+using Azure.Core;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -5,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MyInventory.Api;
 using MyInventory.Api.Models;
+using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +24,8 @@ builder.Services.Configure<AppSettings>(
 builder.Services.AddDbContext<MyInventoryDbContext>(
     options => 
         options.UseSqlServer(appSettings.DatabaseConnectionString));
+
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
@@ -46,19 +51,32 @@ app.MapPost("/add-item", async (
     return Results.Ok("Item registered succesfully");
 });
 
-app.MapPost($"/upload-image/{itemId}", async (
+app.MapPost("{itemId}/upload-image", async (
     Guid itemId,
-    IFormFile picture) =>
+    IFormFile picture,
+    [FromServices] IHttpClientFactory httpClientFactory) =>
 {
-    // IFormFile -> Stream
+    // IFormFile -> Stream -> byte array -> base64 string
 
     var memoryStream = new MemoryStream();
 
     await picture.CopyToAsync(memoryStream);
 
-    //var byteArray = memoryStream.ToArray();
+    memoryStream.Position = 0;
 
-    //var base64 = Convert.ToBase64String(byteArray);
+    var byteArray = memoryStream.ToArray();
+
+    var base64String = Convert.ToBase64String(byteArray);
+
+    var httpClient = httpClientFactory.CreateClient();
+
+    var content = new StringContent(JsonSerializer.Serialize(new ImageProcessorRequest(itemId, base64String)), Encoding.UTF8, "application/json");
+    var response = await httpClient.PostAsync($"{appSettings.ImageProcessorUrl}/api/HttpExample", content);
+
+    // below code did not work looks like its known azure function error
+    // https://stackoverflow.com/questions/73955306/using-postasjsonasync-in-an-azure-function-doesnt-send-the-body-works-in-webap
+    //await httpClient.PostAsJsonAsync($"{appSettings.ImageProcessorUrl}/api/HttpExample", new ImageProcessorRequest("12123", "!23123"));
+
 
     BlobServiceClient blobServiceClient = new BlobServiceClient(appSettings.StorageAccountConnectionString);
 
