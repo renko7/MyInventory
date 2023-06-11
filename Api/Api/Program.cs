@@ -36,16 +36,18 @@ app.UseHttpsRedirection();
 
 app.MapPost("/add-item", async (
     [FromServices] IOptions<AppSettings> appSettings,
+    ItemDTO itemData,
     MyInventoryDbContext dbContext) =>
 {
-    _ = await dbContext.Items.AddAsync(new Item { Name = "myName", Description = "myDescription" });
+    _ = await dbContext.Items.AddAsync(new Item { Name = itemData.Name, Description = itemData.Description });
 
     _ = await dbContext.SaveChangesAsync();
 
     return Results.Ok("Item registered succesfully");
 });
 
-app.MapPost("/upload-image", async (
+app.MapPost($"/upload-image/{itemId}", async (
+    Guid itemId,
     IFormFile picture) =>
 {
     // IFormFile -> Stream
@@ -54,9 +56,9 @@ app.MapPost("/upload-image", async (
 
     await picture.CopyToAsync(memoryStream);
 
-    var byteArray = memoryStream.ToArray();
+    //var byteArray = memoryStream.ToArray();
 
-    var base64 = Convert.ToBase64String(byteArray);
+    //var base64 = Convert.ToBase64String(byteArray);
 
     BlobServiceClient blobServiceClient = new BlobServiceClient(appSettings.StorageAccountConnectionString);
 

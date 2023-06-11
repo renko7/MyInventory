@@ -22,21 +22,6 @@ namespace MyInventory.Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ItemPicture", b =>
-                {
-                    b.Property<int>("ItemsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PictureId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ItemsId", "PictureId");
-
-                    b.HasIndex("PictureId");
-
-                    b.ToTable("ItemPicture");
-                });
-
             modelBuilder.Entity("MyInventory.Api.Models.Item", b =>
                 {
                     b.Property<int>("Id")
@@ -49,12 +34,12 @@ namespace MyInventory.Api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ItemId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ParentItemId")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("PublicId")
                         .ValueGeneratedOnAdd()
@@ -63,7 +48,7 @@ namespace MyInventory.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ItemId");
+                    b.HasIndex("ParentItemId");
 
                     b.ToTable("Items", (string)null);
                 });
@@ -76,6 +61,9 @@ namespace MyInventory.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -86,34 +74,36 @@ namespace MyInventory.Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ItemId");
+
                     b.ToTable("Pictures", (string)null);
                 });
 
-            modelBuilder.Entity("ItemPicture", b =>
+            modelBuilder.Entity("MyInventory.Api.Models.Item", b =>
                 {
-                    b.HasOne("MyInventory.Api.Models.Item", null)
-                        .WithMany()
-                        .HasForeignKey("ItemsId")
+                    b.HasOne("MyInventory.Api.Models.Item", "ParentItem")
+                        .WithMany("ChildItems")
+                        .HasForeignKey("ParentItemId");
+
+                    b.Navigation("ParentItem");
+                });
+
+            modelBuilder.Entity("MyInventory.Api.Models.Picture", b =>
+                {
+                    b.HasOne("MyInventory.Api.Models.Item", "Item")
+                        .WithMany("Pictures")
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyInventory.Api.Models.Picture", null)
-                        .WithMany()
-                        .HasForeignKey("PictureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Item");
                 });
 
             modelBuilder.Entity("MyInventory.Api.Models.Item", b =>
                 {
-                    b.HasOne("MyInventory.Api.Models.Item", null)
-                        .WithMany("Items")
-                        .HasForeignKey("ItemId");
-                });
+                    b.Navigation("ChildItems");
 
-            modelBuilder.Entity("MyInventory.Api.Models.Item", b =>
-                {
-                    b.Navigation("Items");
+                    b.Navigation("Pictures");
                 });
 #pragma warning restore 612, 618
         }

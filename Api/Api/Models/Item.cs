@@ -7,9 +7,11 @@ public class Item
     public string Name { get; set; }
     public string Description { get; set; }
 
-    public ICollection<Item> Items { get; set; } = new List<Item>();
+    public int? ParentItemId { get; set; }
+    public Item? ParentItem { get; set; }
+    public ICollection<Item> ChildItems { get; set; } = new List<Item>();
 
-    public List<Picture> Picture { get; set; } = new();
+    public ICollection<Picture> Pictures { get; set; } = new List<Picture>();
 
     public Item() 
     {
