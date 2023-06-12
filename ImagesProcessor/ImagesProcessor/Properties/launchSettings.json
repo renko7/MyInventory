@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "ImageProcessorFunction": {
+    "ImagesProcessor": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7297",
+      "commandLineArgs": "--port 7179",
       "launchBrowser": false
     }
   }

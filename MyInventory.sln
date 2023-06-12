@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageProcessorFunction", "ImageProcessorFunction.csproj", "{F516F234-73ED-4230-B569-B1E4AE98AB99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyInventory.Api", "Api\MyInventory.Api.csproj", "{2A7F9D7B-357B-40E0-9115-D511AFA1225C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F516F234-73ED-4230-B569-B1E4AE98AB99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F516F234-73ED-4230-B569-B1E4AE98AB99}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F516F234-73ED-4230-B569-B1E4AE98AB99}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F516F234-73ED-4230-B569-B1E4AE98AB99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A7F9D7B-357B-40E0-9115-D511AFA1225C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A7F9D7B-357B-40E0-9115-D511AFA1225C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A7F9D7B-357B-40E0-9115-D511AFA1225C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A7F9D7B-357B-40E0-9115-D511AFA1225C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {C2E7F471-4C49-4FFD-ACCF-9E63602E80B6}
+		SolutionGuid = {1593AC69-090B-449A-9FAA-77F46D72EE01}
 	EndGlobalSection
 EndGlobal

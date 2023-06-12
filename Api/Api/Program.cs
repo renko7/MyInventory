@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MyInventory.Api;
 using MyInventory.Api.Models;
+using MyInventory.Domain;
 using System.Text;
 using System.Text.Json;
 
@@ -53,14 +54,14 @@ app.MapPost("/add-item", async (
 
 app.MapPost("{itemId}/upload-image", async (
     Guid itemId,
-    IFormFile picture,
+    IFormFile image,
     [FromServices] IHttpClientFactory httpClientFactory) =>
 {
     // IFormFile -> Stream -> byte array -> base64 string
 
     var memoryStream = new MemoryStream();
 
-    await picture.CopyToAsync(memoryStream);
+    await image.CopyToAsync(memoryStream);
 
     memoryStream.Position = 0;
 
@@ -70,18 +71,11 @@ app.MapPost("{itemId}/upload-image", async (
 
     var httpClient = httpClientFactory.CreateClient();
 
-    var content = new StringContent(JsonSerializer.Serialize(new ImageProcessorRequest(itemId, base64String)), Encoding.UTF8, "application/json");
-    var response = await httpClient.PostAsync($"{appSettings.ImageProcessorUrl}/api/HttpExample", content);
+    var content = new StringContent(JsonSerializer.Serialize(new ImageProcessorRequest(itemId, base64String, image.ContentType, image.FileName)), Encoding.UTF8, "application/json");
 
-    BlobServiceClient blobServiceClient = new BlobServiceClient(appSettings.StorageAccountConnectionString);
+    //var response = await httpClient.PostAsync($"{appSettings.ImageProcessorUrl}/api/HttpExample", content);
 
-    BlobContainerClient imagesContainerClient = blobServiceClient.GetBlobContainerClient("images");
-
-    BlobClient imageClient = imagesContainerClient.GetBlobClient(picture.FileName);
-
-    memoryStream.Position = 0;
-
-    await imageClient.UploadAsync(memoryStream, new BlobHttpHeaders { ContentType = "images/jpeg" });
+    var response = await httpClient.PostAsync($"{appSettings.ImageProcessorUrl}/api/SendImageProcessingRequest", content);
 });
 
 app.Run();
