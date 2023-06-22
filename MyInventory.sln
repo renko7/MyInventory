@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyInventory.Api", "Api\MyInventory.Api.csproj", "{2A7F9D7B-357B-40E0-9115-D511AFA1225C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyInventory.Api", "Api\Api\MyInventory.Api.csproj", "{9F9CB948-5E27-4EF8-8E12-AB83493AD9E4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyInventory.ImagesProcessor", "ImagesProcessor\ImagesProcessor\MyInventory.ImagesProcessor.csproj", "{A99EF853-9743-4A29-AF92-9599010A8AE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2A7F9D7B-357B-40E0-9115-D511AFA1225C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2A7F9D7B-357B-40E0-9115-D511AFA1225C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2A7F9D7B-357B-40E0-9115-D511AFA1225C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2A7F9D7B-357B-40E0-9115-D511AFA1225C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F9CB948-5E27-4EF8-8E12-AB83493AD9E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F9CB948-5E27-4EF8-8E12-AB83493AD9E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F9CB948-5E27-4EF8-8E12-AB83493AD9E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F9CB948-5E27-4EF8-8E12-AB83493AD9E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A99EF853-9743-4A29-AF92-9599010A8AE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A99EF853-9743-4A29-AF92-9599010A8AE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A99EF853-9743-4A29-AF92-9599010A8AE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A99EF853-9743-4A29-AF92-9599010A8AE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

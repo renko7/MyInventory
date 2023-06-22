@@ -2,7 +2,6 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.DurableTask.Client;
 using Microsoft.DurableTask;
-using System.IO;
 using Azure.Storage.Blobs;
 using ImageProcessorFunction.Models;
 using System.Text.Json;
