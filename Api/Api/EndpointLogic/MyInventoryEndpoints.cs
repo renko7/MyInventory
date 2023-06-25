@@ -41,9 +41,16 @@ public static class MyInventoryEndpoints
 
         for (int i = 0; i < length; i++)
         {
-            var randomVal = rnd.Next(33, 127);
+            char c = default;
 
-            randomWord += (char)randomVal;
+            while (c != '/')
+            {
+                var randomVal = rnd.Next(33, 127);
+
+                c = (char)randomVal;
+            }
+
+            randomWord += c;
         }
 
         return $"{randomWord}.{extension}";
