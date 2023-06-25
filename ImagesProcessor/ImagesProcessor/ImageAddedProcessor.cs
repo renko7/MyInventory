@@ -19,11 +19,23 @@ namespace MyInventory.ImagesProcessor
         [Function("ImageAddedProcessor")]
         public void Run([EventGridTrigger] CloudEvent imageUploadedEvent)
         {
-            var serializedInput = imageUploadedEvent.ToString();
+            _logger.LogInformation($"Entering {nameof(ImageAddedProcessor)}");
+
+            var serializedInput = new
+            {
+                Id = imageUploadedEvent.Id,
+                Type = imageUploadedEvent.Type,
+                DataFormat = imageUploadedEvent.DataContentType,
+                Data = imageUploadedEvent?.Data?.ToString(),
+                SpecVersion = "1.0 --> hardcoded in cloudevent class"
+            }.ToString();
 
             _logger.LogInformation(serializedInput);
 
             Console.WriteLine(serializedInput);
+
+            _logger.LogInformation($"Exiting {nameof(ImageAddedProcessor)}");
         }
+
     }
 }
