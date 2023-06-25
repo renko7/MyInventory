@@ -1,9 +1,9 @@
 ﻿using Azure.Storage.Blobs.Models;
+using MyInventory.Api.Models;
 
 namespace MyInventory.Api.Services;
 
 public interface IUploadImageService
 {
-    // change from blobcontentinfo to upload result to not tie to azure
-    Task<BlobContentInfo> UploadImage(string name, IFormFile image, Dictionary<string, string>? customMetadata = null);
+    Task<UploadImageResult> UploadImage(string name, IFormFile image, Dictionary<string, string>? customMetadata = null);
 }

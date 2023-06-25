@@ -14,7 +14,7 @@ public class UploadImageService : IUploadImageService
       _appSettings = options.Value;
     }
 
-    public async Task<BlobContentInfo> UploadImage(string name, IFormFile image, Dictionary<string, string>? customMetadata = null)
+    public async Task<UploadImageResult> UploadImage(string name, IFormFile image, Dictionary<string, string>? customMetadata = null)
     {
         BlobServiceClient blobServiceClient = new BlobServiceClient(_appSettings.StorageAccountConnectionString);
         BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(_appSettings.StorageAccountContainerName);
@@ -25,9 +25,12 @@ public class UploadImageService : IUploadImageService
         memoryStream.Position = 0;
 
 
-        var result = await blobClient.UploadAsync(memoryStream);
-        
-        var response = await blobClient.SetMetadataAsync(customMetadata);
+        var uploadImageResult = await blobClient.UploadAsync(memoryStream);
+        var uploadMetaDataResult = await blobClient.SetMetadataAsync(customMetadata);
+
+        var result = new UploadImageResult(
+                !uploadImageResult.GetRawResponse().IsError,
+                !uploadMetaDataResult.GetRawResponse().IsError);
 
         return result;
     }

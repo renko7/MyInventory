@@ -19,7 +19,7 @@ public static class MyInventoryEndpoints
 
         var result = await uploadImageService.UploadImage(fileName, image, new Dictionary<string, string> { { "ItemId", itemId.ToString() } });
 
-        return Results.Ok("upload image endpoing called");
+        return Results.Ok(result) ;
     }
 
     public static async Task<IResult> AddItem(IOptions<AppSettings> appSettings, AddItemRequest itemData, MyInventoryDbContext dbContext)
