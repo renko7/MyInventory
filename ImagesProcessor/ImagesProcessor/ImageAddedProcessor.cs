@@ -17,9 +17,9 @@ namespace MyInventory.ImagesProcessor
         }
 
         [Function("ImageAddedProcessor")]
-        public void Run([EventGridTrigger] CloudEvent imageAddedEvent)
+        public void Run([EventGridTrigger] CloudEvent imageUploadedEvent)
         {
-            var serializedInput = imageAddedEvent.ToString();
+            var serializedInput = imageUploadedEvent.ToString();
 
             _logger.LogInformation(serializedInput);
 
