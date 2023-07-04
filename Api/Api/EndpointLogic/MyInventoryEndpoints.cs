@@ -43,11 +43,11 @@ public static class MyInventoryEndpoints
         while (randomWord.Length < length)
         {
             Random rnd = new Random();
-            var randomVal = rnd.Next(33, 127);
+            var randomVal = rnd.Next(48, 123);
 
             char c = (char)randomVal;
 
-            if (!unAllowedCharacters.Contains(c))
+            if (!char.IsLetterOrDigit(c))
             {
                 randomWord += c;
             }
