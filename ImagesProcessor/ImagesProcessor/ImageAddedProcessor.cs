@@ -29,6 +29,16 @@ namespace MyInventory.ImagesProcessor
         {
             _logger.LogInformation($"Entering {nameof(ImageAddedProcessor)}");
 
+            var eventDeSerialized = new
+            {
+                Source = imageUploadedEvent.Source,
+                Type = imageUploadedEvent.Type,
+                Id = imageUploadedEvent.Id,
+                Data = imageUploadedEvent.Data.ToString()
+            };
+
+            _logger.LogInformation(eventDeSerialized.ToString());
+
             var eventDataString = $"""{imageUploadedEvent?.Data.ToString()}""";
 
             var dataDeserialized = JsonConvert.DeserializeAnonymousType(eventDataString, new
