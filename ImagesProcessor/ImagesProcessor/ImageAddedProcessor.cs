@@ -43,7 +43,7 @@ namespace MyInventory.ImagesProcessor
                 FileType = Path.GetExtension(dataDeserialized.Url.ToString())
             };
 
-            BlobClient blobClient = new BlobClient(dataDeserialized.Url);
+            BlobClient blobClient = new BlobClient(_appSettings.StorageAccountConnectionString, _appSettings.StorageAccountContainerName, imageProperties.FileName);
 
             var response = await blobClient.GetPropertiesAsync();
 
