@@ -36,8 +36,6 @@ public static class MyInventoryEndpoints
     {
         var randomWord = "";
 
-        var unAllowedCharacters = new HashSet<char>() { '/', '\\', ':', '?', '=', '&', '#', '.'};
-
         var extension = Path.GetExtension(name);
 
         while (randomWord.Length < length)
@@ -47,7 +45,7 @@ public static class MyInventoryEndpoints
 
             char c = (char)randomVal;
 
-            if (!char.IsLetterOrDigit(c))
+            if (char.IsLetterOrDigit(c))
             {
                 randomWord += c;
             }
