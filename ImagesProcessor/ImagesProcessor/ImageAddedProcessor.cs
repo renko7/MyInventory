@@ -1,12 +1,14 @@
 // Default URL for triggering event grid function in the local environment.
 // http://localhost:7071/runtime/webhooks/EventGrid?functionName={functionname}
 using System;
+using System.Net.Sockets;
 using Azure.Messaging;
 using Azure.Storage.Blobs;
 using ImageProcessorFunction.Models;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace MyInventory.ImagesProcessor
@@ -27,28 +29,34 @@ namespace MyInventory.ImagesProcessor
         {
             _logger.LogInformation($"Entering {nameof(ImageAddedProcessor)}");
 
-            var serializedInput = new
+            var eventDataString = $"""{imageUploadedEvent?.Data.ToString()}""";
+
+            var dataDeserialized = JsonConvert.DeserializeAnonymousType(eventDataString, new
             {
-                Id = imageUploadedEvent.Id,
-                Type = imageUploadedEvent.Type,
-                DataFormat = imageUploadedEvent.DataContentType,
-                Data = imageUploadedEvent?.Data?.ToString(),
-                SpecVersion = "1.0 --> hardcoded in cloudevent class"
-            }.ToString();
+                Url = (Uri)default
+            });
 
-            _logger.LogInformation(serializedInput);
+            var imageProperties = new
+            {
+                Container = dataDeserialized.Url.Segments[1].Trim('/'),
+                FileName = Path.GetFileNameWithoutExtension(dataDeserialized.Url.ToString()),
+                FileType = Path.GetExtension(dataDeserialized.Url.ToString())
+            };
 
-            var eventData = $"""{imageUploadedEvent?.Data}""";
-
-            JObject eventDataJson = JObject.Parse(eventData);
-
-            BlobClient blobClient = new BlobClient((Uri)eventDataJson["url"]);
+            BlobClient blobClient = new BlobClient(dataDeserialized.Url);
 
             var response = await blobClient.GetPropertiesAsync();
 
             var metaData = response.Value.Metadata;
 
             metaData.TryGetValue("ItemId", out var itemId);
+
+            _logger.LogInformation($"""
+                EventDataString = {eventDataString}
+                DataDeserialized = {dataDeserialized}
+                ImageProperties = {imageProperties}
+                BlobMetaData = {JsonConvert.SerializeObject(metaData)}
+                """);
 
             _logger.LogInformation($"THE BLOBMETADATA {itemId}");
       

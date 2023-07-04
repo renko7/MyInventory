@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Options;
 using MyInventory.Api.Models;
 using MyInventory.Api.Services;
@@ -19,7 +20,7 @@ public static class MyInventoryEndpoints
 
         var result = await uploadImageService.UploadImage(fileName, image, new Dictionary<string, string> { { "ItemId", itemId.ToString() } });
 
-        return Results.Ok(result) ;
+        return Results.Ok(result);
     }
 
     public static async Task<IResult> AddItem(IOptions<AppSettings> appSettings, AddItemRequest itemData, MyInventoryDbContext dbContext)
@@ -35,24 +36,22 @@ public static class MyInventoryEndpoints
     {
         var randomWord = "";
 
-        var extension = name.Split(".")[1];
+        var unAllowedCharacters = new HashSet<char>() { '/', '\\', ':', '?', '=', '&', '#', '.'};
 
-        Random rnd = new Random();
+        var extension = Path.GetExtension(name);
 
-        for (int i = 0; i < length; i++)
+        while (randomWord.Length < length)
         {
-            char c = default;
+            Random rnd = new Random();
+            var randomVal = rnd.Next(33, 127);
 
-            while (c != '/')
+            char c = (char)randomVal;
+
+            if (!unAllowedCharacters.Contains(c))
             {
-                var randomVal = rnd.Next(33, 127);
-
-                c = (char)randomVal;
+                randomWord += c;
             }
-
-            randomWord += c;
         }
-
-        return $"{randomWord}.{extension}";
+        return $"{randomWord}{extension}";
     }
 }
