@@ -43,20 +43,23 @@ namespace MyInventory.ImagesProcessor
                 FileType = Path.GetExtension(dataDeserialized.Url.ToString())
             };
 
-            BlobClient blobClient = new BlobClient(_appSettings.StorageAccountConnectionString, _appSettings.StorageAccountContainerName, imageProperties.FileName);
+            BlobClient blobClient = new BlobClient(_appSettings.StorageAccountConnectionString, _appSettings.StorageAccountContainerName, $"{imageProperties.FileName}{imageProperties.FileType}");
+
+
+            _logger.LogInformation($"""
+                EventDataString = {eventDataString}
+                DataDeserialized = {dataDeserialized}
+                ImageProperties = {imageProperties}
+                BlobClientUrl = {blobClient.Uri}
+                """);
+
+            //BlobMetaData = {JsonConvert.SerializeObject(metaData)
 
             var response = await blobClient.GetPropertiesAsync();
 
             var metaData = response.Value.Metadata;
 
             metaData.TryGetValue("ItemId", out var itemId);
-
-            _logger.LogInformation($"""
-                EventDataString = {eventDataString}
-                DataDeserialized = {dataDeserialized}
-                ImageProperties = {imageProperties}
-                BlobMetaData = {JsonConvert.SerializeObject(metaData)}
-                """);
 
             _logger.LogInformation($"THE BLOBMETADATA {itemId}");
       
